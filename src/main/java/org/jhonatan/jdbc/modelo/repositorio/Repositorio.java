@@ -10,7 +10,7 @@ public interface Repositorio<T> {
 
     T porId(Long id) throws SQLException;
 
-    void guardar(T t) throws SQLException;
+    T guardar(T t) throws SQLException;
 
     void eliminar(Long id) throws SQLException;
 

@@ -46,7 +46,7 @@ public class ProductoRepositorioImpl
     }
 
     @Override
-    public void guardar(Producto t) throws SQLException {
+    public Producto guardar(Producto t) throws SQLException {
         String sql;
         if (t.getId() != null && t.getId() > 0) {
             sql = "UPDATE productos  "
@@ -76,6 +76,8 @@ public class ProductoRepositorioImpl
             //ejecutamos
             stmt.executeUpdate();
         }
+        //retornamos el producto
+        return t;
     }
 
     @Override
