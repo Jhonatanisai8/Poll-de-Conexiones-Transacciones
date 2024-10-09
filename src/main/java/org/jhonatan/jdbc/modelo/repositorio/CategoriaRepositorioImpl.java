@@ -48,16 +48,43 @@ public class CategoriaRepositorioImpl
 
     @Override
     public Categoria guardar(Categoria t) throws SQLException {
+        String sql = null;
+        //preguntamos
+        if (t.getId() != null && t.getId() > 0) {
+            sql = "UPDATE categoria SET nombre = ? WHERE id_categoria = ?";
+        } else {
+            sql = "INSERT INTO categoria (nombre) VALUES (?)";
+        }
+        //que devuelva el id generado del insert 
+        try ( PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            stmt.setString(1, t.getNombre());
+            if (t.getId() != null && t.getId() > 0) {
+                stmt.setLong(2, t.getId());
+            }
+            stmt.executeUpdate();
+            if (t.getId() == null) {
+                try ( ResultSet rs = stmt.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        t.setId(rs.getLong(1));
+                    }
+                }
+            }
+        }
+        return t;
     }
 
     @Override
     public void eliminar(Long id) throws SQLException {
+        try ( PreparedStatement stmt = conn.prepareStatement("DELETE FROM categoria WHERE id_categoria  = ?")) {
+            stmt.setLong(1, id);
+            stmt.executeUpdate();
+        }
     }
 
     private Categoria crearCategoria(final ResultSet rs) throws SQLException {
         Categoria categoria = new Categoria();
         //establemos los satributos
-        categoria.setIdCategoria(rs.getLong("id_categoria"));
+        categoria.setId(rs.getLong("id_categoria"));
         categoria.setNombre(rs.getString("categoria"));
         return categoria;
     }
