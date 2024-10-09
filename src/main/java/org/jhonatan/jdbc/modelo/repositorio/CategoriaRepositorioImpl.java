@@ -51,9 +51,9 @@ public class CategoriaRepositorioImpl
         String sql = null;
         //preguntamos
         if (t.getId() != null && t.getId() > 0) {
-            sql = "UPDATE categoria SET nombre = ? WHERE id_categoria = ?";
+            sql = "UPDATE categoria SET categoria = ? WHERE id_categoria = ?";
         } else {
-            sql = "INSERT INTO categoria (nombre) VALUES (?)";
+            sql = "INSERT INTO categoria (categoria) VALUES (?)";
         }
         //que devuelva el id generado del insert 
         try ( PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
