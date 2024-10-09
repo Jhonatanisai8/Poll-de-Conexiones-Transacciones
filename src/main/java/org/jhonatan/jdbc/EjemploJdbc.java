@@ -9,7 +9,7 @@ import org.jhonatan.jdbc.modelo.repositorio.Repositorio;
 public class EjemploJdbc {
 
     public static void main(String[] args) {
-        System.out.println("JAVA Y JBDC");
+        System.out.println("JAVA Y JBDC TRANSACCIONES CON UN POLL DE  CONEXIONES");
 
         System.out.println("\t========LISTA DE PRODUCTOS========");
         Repositorio<Producto> repositorio = new ProductoRepositorioImpl();
