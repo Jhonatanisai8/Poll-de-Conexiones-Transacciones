@@ -17,9 +17,7 @@ public class ProductoRepositorioImpl
     @Override
     public List<Producto> listar() {
         List<Producto> productos = new ArrayList<>();
-        try ( Connection con = getConection();  
-                Statement stmt = con.createStatement();  
-                ResultSet rs = stmt.executeQuery("SELECT p.*,c.categoria AS categoria FROM productos AS p  INNER JOIN categoria AS c ON p.id_categoria = c.id_categoria")) {
+        try ( Connection con = getConection();  Statement stmt = con.createStatement();  ResultSet rs = stmt.executeQuery("SELECT p.*,c.categoria AS categoria FROM productos AS p  INNER JOIN categoria AS c ON p.id_categoria = c.id_categoria")) {
             while (rs.next()) {
                 Producto p = creaProducto(rs);
                 //agregamos al arraylist
@@ -36,9 +34,8 @@ public class ProductoRepositorioImpl
     @Override
     public Producto porId(Long id) {
         Producto p = null;
-        try (  Connection con = getConection();
-                PreparedStatement stmt = con.prepareStatement("SELECT p.*,c.categoria AS categoria FROM productos AS p  INNER JOIN categoria AS c ON p.id_categoria = c.id_categoria "
-                        + " WHERE p.id_categoria = ?")) {
+        try ( Connection con = getConection();  PreparedStatement stmt = con.prepareStatement("SELECT p.*,c.categoria AS categoria FROM productos AS p  INNER JOIN categoria AS c ON p.id_categoria = c.id_categoria "
+                + " WHERE p.id_categoria = ?")) {
             //parametro de la consulta
             stmt.setLong(1, id);
             try ( //ejecutamos la consulta y se cierra automaticamente
@@ -58,21 +55,29 @@ public class ProductoRepositorioImpl
     public void guardar(Producto t) {
         String sql;
         if (t.getId() != null && t.getId() > 0) {
-            sql = "UPDATE productos SET nombre = ?, precio = ?,id_categoria = ? WHERE idproducto = ? ";
+            sql = "UPDATE productos  "
+                    + "SET nombre = ?, "
+                    + " precio = ?, "
+                    + "id_categoria = ?, "
+                    + "sku = ?  "
+                    + " WHERE idproducto = ? ";
         } else {
-            sql = "INSERT INTO productos (nombre,precio,id_categoria,fecha) VALUES (?,?,?,?)";
+            sql = "INSERT INTO productos"
+                    + " (nombre,precio,id_categoria,sku,fecha) "
+                    + "VALUES (?,?,?,?,?)";
         }
-        try ( Connection con = getConection();
-                PreparedStatement stmt = con.prepareStatement(sql)) {
+        try ( Connection con = getConection();  PreparedStatement stmt = con.prepareStatement(sql)) {
 
             //le pasamos los parametros
             stmt.setString(1, t.getNombre());
             stmt.setDouble(2, t.getPrecio());
             stmt.setLong(3, t.getCategoria().getIdCategoria());
+            stmt.setString(4, t.getSku());
+            
             if (t.getId() != null && t.getId() > 0) {
-                stmt.setLong(4, t.getId());
+                stmt.setLong(5, t.getId());
             } else {
-                stmt.setDate(4, new Date(t.getFechaRegistro().getTime()));
+                stmt.setDate(5, new Date(t.getFechaRegistro().getTime()));
             }
             //ejecutamos
             stmt.executeUpdate();
@@ -83,8 +88,7 @@ public class ProductoRepositorioImpl
 
     @Override
     public void eliminar(Long id) {
-        try ( Connection con = getConection();
-                PreparedStatement stmt = con.prepareStatement("DELETE FROM productos WHERE idproducto = ?")) {
+        try ( Connection con = getConection();  PreparedStatement stmt = con.prepareStatement("DELETE FROM productos WHERE idproducto = ?")) {
             stmt.setLong(1, id);
             stmt.executeUpdate();
         } catch (Exception e) {
