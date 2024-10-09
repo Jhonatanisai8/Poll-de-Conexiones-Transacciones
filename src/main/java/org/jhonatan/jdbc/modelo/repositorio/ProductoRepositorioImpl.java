@@ -92,6 +92,7 @@ public class ProductoRepositorioImpl
         p.setNombre(rs.getString("nombre"));
         p.setPrecio(rs.getInt("precio"));
         p.setFechaRegistro(rs.getDate("fecha"));
+        p.setSku(rs.getString("sku"));
 
         Categoria c = new Categoria();
         c.setIdCategoria(rs.getInt("id_categoria"));
