@@ -2,18 +2,18 @@ package org.jhonatan.jdbc.modelo;
 
 public class Categoria {
 
-    private long idCategoria;
+    private Long id;
     private String nombre;
 
     public Categoria() {
     }
 
-    public long getIdCategoria() {
-        return idCategoria;
+    public Long getId() {
+        return id;
     }
 
-    public void setIdCategoria(long idCategoria) {
-        this.idCategoria = idCategoria;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getNombre() {
