@@ -1,23 +1,29 @@
 package org.jhonatan.jdbc.modelo.repositorio;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import org.jhonatan.jdbc.modelo.Categoria;
-import org.jhonatan.jdbc.modelo.Producto;
+import java.util.*;
+import org.jhonatan.jdbc.modelo.*;
 import org.jhonatan.jdbc.util.ConexionBaseDatos;
 
 public class ProductoRepositorioImpl
         implements Repositorio<Producto> {
-    
+
+    //atributo de esta clase 
+    private Connection con;
+
+    //constructor 
+    public ProductoRepositorioImpl(Connection con) {
+        this.con = con;
+    }
+
     private Connection getConection() throws SQLException {
         return ConexionBaseDatos.getConnection();
     }
-    
+
     @Override
     public List<Producto> listar() throws SQLException {
         List<Producto> productos = new ArrayList<>();
-        try ( Connection con = getConection();  Statement stmt = con.createStatement();  ResultSet rs = stmt.executeQuery("SELECT p.*,c.categoria AS categoria FROM productos AS p  INNER JOIN categoria AS c ON p.id_categoria = c.id_categoria")) {
+        try ( Statement stmt = con.createStatement();  ResultSet rs = stmt.executeQuery("SELECT p.*,c.categoria AS categoria FROM productos AS p  INNER JOIN categoria AS c ON p.id_categoria = c.id_categoria")) {
             while (rs.next()) {
                 Producto p = creaProducto(rs);
                 //agregamos al arraylist
@@ -27,11 +33,11 @@ public class ProductoRepositorioImpl
         //revolvemos la lista
         return productos;
     }
-    
+
     @Override
     public Producto porId(Long id) throws SQLException {
         Producto p = null;
-        try ( Connection con = getConection();  PreparedStatement stmt = con.prepareStatement("SELECT p.*,c.categoria AS categoria FROM productos AS p  INNER JOIN categoria AS c ON p.id_categoria = c.id_categoria "
+        try ( PreparedStatement stmt = con.prepareStatement("SELECT p.*,c.categoria AS categoria FROM productos AS p  INNER JOIN categoria AS c ON p.id_categoria = c.id_categoria "
                 + " WHERE p.id_categoria = ?")) {
             //parametro de la consulta
             stmt.setLong(1, id);
@@ -44,7 +50,7 @@ public class ProductoRepositorioImpl
         }
         return p;
     }
-    
+
     @Override
     public Producto guardar(Producto t) throws SQLException {
         String sql;
@@ -60,20 +66,18 @@ public class ProductoRepositorioImpl
                     + " (nombre,precio,id_categoria,sku,fecha) "
                     + "VALUES (?,?,?,?,?)";
         }
-        try ( Connection con = getConection();  PreparedStatement stmt
-                = //pasamos una constante
-                con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try ( PreparedStatement stmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             //le pasamos los parametros
             stmt.setString(1, t.getNombre());
             stmt.setDouble(2, t.getPrecio());
             stmt.setLong(3, t.getCategoria().getIdCategoria());
             stmt.setString(4, t.getSku());
-            
+
             if (t.getId() != null && t.getId() > 0) {
                 stmt.setLong(5, t.getId());
             } else {
-                stmt.setDate(5, new Date(t.getFechaRegistro().getTime()));
+                stmt.setDate(5, new java.sql.Date(t.getFechaRegistro().getTime()));
             }
             //ejecutamos
             stmt.executeUpdate();
@@ -90,15 +94,15 @@ public class ProductoRepositorioImpl
         //retornamos el producto
         return t;
     }
-    
+
     @Override
     public void eliminar(Long id) throws SQLException {
-        try ( Connection con = getConection();  PreparedStatement stmt = con.prepareStatement("DELETE FROM productos WHERE idproducto = ?")) {
+        try ( PreparedStatement stmt = con.prepareStatement("DELETE FROM productos WHERE idproducto = ?")) {
             stmt.setLong(1, id);
             stmt.executeUpdate();
         }
     }
-    
+
     public Producto creaProducto(ResultSet rs) throws SQLException {
         Producto p = new Producto();
         p.setId(rs.getLong("idproducto"));
@@ -106,7 +110,7 @@ public class ProductoRepositorioImpl
         p.setPrecio(rs.getInt("precio"));
         p.setFechaRegistro(rs.getDate("fecha"));
         p.setSku(rs.getString("sku"));
-        
+
         Categoria c = new Categoria();
         c.setIdCategoria(rs.getInt("id_categoria"));
         c.setNombre(rs.getString("categoria"));
