@@ -70,7 +70,7 @@ public class ProductoRepositorioImpl
 
             //le pasamos los parametros
             stmt.setString(1, t.getNombre());
-            stmt.setDouble(2, t.getPrecio());
+            stmt.setLong(2, t.getPrecio());
             stmt.setLong(3, t.getCategoria().getId());
             stmt.setString(4, t.getSku());
 
