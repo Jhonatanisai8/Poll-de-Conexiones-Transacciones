@@ -9,11 +9,11 @@ import org.jhonatan.jdbc.util.ConexionBaseDatos;
 
 public class ProductoRepositorioImpl
         implements Repositorio<Producto> {
-
+    
     private Connection getConection() throws SQLException {
         return ConexionBaseDatos.getConnection();
     }
-
+    
     @Override
     public List<Producto> listar() throws SQLException {
         List<Producto> productos = new ArrayList<>();
@@ -27,7 +27,7 @@ public class ProductoRepositorioImpl
         //revolvemos la lista
         return productos;
     }
-
+    
     @Override
     public Producto porId(Long id) throws SQLException {
         Producto p = null;
@@ -44,7 +44,7 @@ public class ProductoRepositorioImpl
         }
         return p;
     }
-
+    
     @Override
     public Producto guardar(Producto t) throws SQLException {
         String sql;
@@ -60,14 +60,16 @@ public class ProductoRepositorioImpl
                     + " (nombre,precio,id_categoria,sku,fecha) "
                     + "VALUES (?,?,?,?,?)";
         }
-        try ( Connection con = getConection();  PreparedStatement stmt = con.prepareStatement(sql)) {
+        try ( Connection con = getConection();  PreparedStatement stmt
+                = //pasamos una constante
+                con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             //le pasamos los parametros
             stmt.setString(1, t.getNombre());
             stmt.setDouble(2, t.getPrecio());
             stmt.setLong(3, t.getCategoria().getIdCategoria());
             stmt.setString(4, t.getSku());
-
+            
             if (t.getId() != null && t.getId() > 0) {
                 stmt.setLong(5, t.getId());
             } else {
@@ -75,11 +77,20 @@ public class ProductoRepositorioImpl
             }
             //ejecutamos
             stmt.executeUpdate();
+            //si el id el igual a null
+            if (t.getId() == null) {
+                try ( ResultSet rs = stmt.getGeneratedKeys()) {
+                    //movemos el cursor si tiene un id generado o incrementado
+                    if (rs.next()) {
+                        t.setId(rs.getLong(1));
+                    }
+                }
+            }
         }
         //retornamos el producto
         return t;
     }
-
+    
     @Override
     public void eliminar(Long id) throws SQLException {
         try ( Connection con = getConection();  PreparedStatement stmt = con.prepareStatement("DELETE FROM productos WHERE idproducto = ?")) {
@@ -87,7 +98,7 @@ public class ProductoRepositorioImpl
             stmt.executeUpdate();
         }
     }
-
+    
     public Producto creaProducto(ResultSet rs) throws SQLException {
         Producto p = new Producto();
         p.setId(rs.getLong("idproducto"));
@@ -95,7 +106,7 @@ public class ProductoRepositorioImpl
         p.setPrecio(rs.getInt("precio"));
         p.setFechaRegistro(rs.getDate("fecha"));
         p.setSku(rs.getString("sku"));
-
+        
         Categoria c = new Categoria();
         c.setIdCategoria(rs.getInt("id_categoria"));
         c.setNombre(rs.getString("categoria"));
