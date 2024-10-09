@@ -1,5 +1,6 @@
 package org.jhonatan.jdbc;
 
+import java.sql.SQLException;
 import java.util.Date;
 import org.jhonatan.jdbc.modelo.Categoria;
 import org.jhonatan.jdbc.modelo.Producto;
@@ -8,7 +9,7 @@ import org.jhonatan.jdbc.modelo.repositorio.Repositorio;
 
 public class EjemploJdbc {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         System.out.println("JAVA Y JBDC TRANSACCIONES CON UN POLL DE  CONEXIONES");
 
         System.out.println("\t========LISTA DE PRODUCTOS========");
