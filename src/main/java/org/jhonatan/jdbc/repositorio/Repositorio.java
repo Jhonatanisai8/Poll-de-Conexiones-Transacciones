@@ -1,10 +1,13 @@
 package org.jhonatan.jdbc.repositorio;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
 //de tipo generico
 public interface Repositorio<T> {
+
+    void setConn(Connection conn);
 
     List<T> listar() throws SQLException;
 

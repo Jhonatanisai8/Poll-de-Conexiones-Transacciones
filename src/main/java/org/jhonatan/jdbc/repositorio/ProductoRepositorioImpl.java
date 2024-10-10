@@ -16,6 +16,17 @@ public class ProductoRepositorioImpl
         this.con = con;
     }
 
+    public ProductoRepositorioImpl() {
+    }
+
+    public Connection getConn() {
+        return con;
+    }
+
+    public void setConn(Connection conn) {
+        this.con = conn;
+    }
+
     private Connection getConection() throws SQLException {
         return ConexionBaseDatos.getConnection();
     }
