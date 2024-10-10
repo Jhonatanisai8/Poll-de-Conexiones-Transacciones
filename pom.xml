@@ -9,7 +9,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>15</maven.compiler.source>
         <maven.compiler.target>15</maven.compiler.target>
-        <exec.mainClass>org.jhonatan.jdbc.EjemploJbdcTrx</exec.mainClass>
+        <exec.mainClass>org.jhonatan.jdbc.EjemploJbdcTrxService</exec.mainClass>
     </properties>
 
     <dependencies>
