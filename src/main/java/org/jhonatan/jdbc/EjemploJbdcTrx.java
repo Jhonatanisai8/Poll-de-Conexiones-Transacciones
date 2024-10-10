@@ -5,9 +5,9 @@ import java.sql.SQLException;
 import java.util.Date;
 import org.jhonatan.jdbc.modelo.Categoria;
 import org.jhonatan.jdbc.modelo.Producto;
-import org.jhonatan.jdbc.modelo.repositorio.CategoriaRepositorioImpl;
-import org.jhonatan.jdbc.modelo.repositorio.ProductoRepositorioImpl;
-import org.jhonatan.jdbc.modelo.repositorio.Repositorio;
+import org.jhonatan.jdbc.repositorio.CategoriaRepositorioImpl;
+import org.jhonatan.jdbc.repositorio.ProductoRepositorioImpl;
+import org.jhonatan.jdbc.repositorio.Repositorio;
 import org.jhonatan.jdbc.util.ConexionBaseDatos;
 
 public class EjemploJbdcTrx {

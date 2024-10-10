@@ -1,4 +1,4 @@
-package org.jhonatan.jdbc.modelo.repositorio;
+package org.jhonatan.jdbc.repositorio;
 
 import java.sql.*;
 import java.util.ArrayList;

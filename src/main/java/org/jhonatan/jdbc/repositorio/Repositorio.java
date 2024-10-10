@@ -1,4 +1,4 @@
-package org.jhonatan.jdbc.modelo.repositorio;
+package org.jhonatan.jdbc.repositorio;
 
 import java.sql.SQLException;
 import java.util.List;
