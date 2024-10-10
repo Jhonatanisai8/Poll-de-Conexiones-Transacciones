@@ -27,9 +27,8 @@ public class CatalogoServicio
         try ( Connection conn = ConexionBaseDatos.getConnection()) {
             //asignamos la conexion
             productoRepositorio.setConn(conn);
-
+            return productoRepositorio.listar();
         }
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
@@ -37,9 +36,8 @@ public class CatalogoServicio
         try ( Connection conn = ConexionBaseDatos.getConnection()) {
             //asignamos la conexion
             productoRepositorio.setConn(conn);
-
+            return productoRepositorio.porId(id);
         }
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
@@ -47,9 +45,19 @@ public class CatalogoServicio
         try ( Connection conn = ConexionBaseDatos.getConnection()) {
             //asignamos la conexion
             productoRepositorio.setConn(conn);
-
+            if (conn.getAutoCommit()) {
+                conn.setAutoCommit(false);
+            }
+            Producto nuevoProducto = null;
+            try {
+                nuevoProducto = productoRepositorio.guardar(producto);
+                conn.commit();
+            } catch (SQLException e) {
+                conn.rollback();
+                System.out.println("Error en guardar: " + e.getMessage());
+            }
+            return nuevoProducto;
         }
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
@@ -57,8 +65,17 @@ public class CatalogoServicio
         try ( Connection conn = ConexionBaseDatos.getConnection()) {
             //asignamos la conexion
             productoRepositorio.setConn(conn);
+            if (conn.getAutoCommit()) {
+                conn.setAutoCommit(false);
+            }
+            try {
+                productoRepositorio.eliminar(id);
+                conn.commit();
+            } catch (SQLException e) {
+                conn.rollback();
+                System.out.println("Error en guardar: " + e.getMessage());
+            }
         }
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
@@ -66,8 +83,8 @@ public class CatalogoServicio
         try ( Connection conn = ConexionBaseDatos.getConnection()) {
             //asignamos la conexion
             categoriaRepositorio.setConn(conn);
+            return categoriaRepositorio.listar();
         }
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
@@ -75,17 +92,28 @@ public class CatalogoServicio
         try ( Connection conn = ConexionBaseDatos.getConnection()) {
             //asignamos la conexion
             categoriaRepositorio.setConn(conn);
+            return categoriaRepositorio.porId(id);
         }
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
-    public Categoria guardarCategoria() throws SQLException {
+    public Categoria guardarCategoria(Categoria c) throws SQLException {
         try ( Connection conn = ConexionBaseDatos.getConnection()) {
             //asignamos la conexion
             categoriaRepositorio.setConn(conn);
+            if (conn.getAutoCommit()) {
+                conn.setAutoCommit(false);
+            }
+            Categoria nuevaCategoria = null;
+            try {
+                nuevaCategoria = categoriaRepositorio.guardar(c);
+                conn.commit();
+            } catch (SQLException e) {
+                conn.rollback();
+                System.out.println("Error en guardar: " + e.getMessage());
+            }
+            return nuevaCategoria;
         }
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
@@ -93,8 +121,17 @@ public class CatalogoServicio
         try ( Connection conn = ConexionBaseDatos.getConnection()) {
             //asignamos la conexion
             categoriaRepositorio.setConn(conn);
+            if (conn.getAutoCommit()) {
+                conn.setAutoCommit(false);
+            }
+            try {
+                categoriaRepositorio.eliminar(id);
+                conn.commit();
+            } catch (SQLException e) {
+                conn.rollback();
+                System.out.println("Error en guardar: " + e.getMessage());
+            }
         }
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
@@ -103,8 +140,23 @@ public class CatalogoServicio
             //asignamos la conexion
             productoRepositorio.setConn(conn);
             categoriaRepositorio.setConn(conn);
+            if (conn.getAutoCommit()) {
+                conn.setAutoCommit(false);
+            }
+            try {
+
+                //nuevas variables
+                Categoria nueCategoria = categoriaRepositorio.guardar(c);
+                //asignamos la categoria 
+                p.setCategoria(nueCategoria);
+
+                productoRepositorio.guardar(p);
+                conn.commit();
+            } catch (SQLException e) {
+                conn.rollback();
+                System.out.println("Error en guardar: " + e.getMessage());
+            }
         }
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
 }
