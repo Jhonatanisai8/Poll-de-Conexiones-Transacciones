@@ -1,16 +1,11 @@
 package org.jhonatan.jdbc;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Date;
 import org.jhonatan.jdbc.modelo.Categoria;
 import org.jhonatan.jdbc.modelo.Producto;
-import org.jhonatan.jdbc.repositorio.CategoriaRepositorioImpl;
-import org.jhonatan.jdbc.repositorio.ProductoRepositorioImpl;
-import org.jhonatan.jdbc.repositorio.Repositorio;
 import org.jhonatan.jdbc.servicio.CatalogoServicio;
 import org.jhonatan.jdbc.servicio.Servicio;
-import org.jhonatan.jdbc.util.ConexionBaseDatos;
 
 public class EjemploJbdcTrxService {
 
@@ -23,17 +18,17 @@ public class EjemploJbdcTrxService {
         servicio.listar().forEach(System.out::println);
         System.out.println("");
 
-        System.out.println("\t==INSERTAR UNA NUEVA CATEGORIA==");
         Categoria categoria = new Categoria();
+        categoria.setId(15L);
         categoria.setNombre("Iluminacion");
         System.out.println("");
 
         System.out.println("\t==INSERTAR UNA NUEVA PRODUCTO==");
         Producto producto = new Producto();
-        producto.setNombre("Lampara Led Escritorio");
-        producto.setPrecio(990);
+        producto.setNombre("Foco Led Escritorio");
+        producto.setPrecio(123);
         producto.setFechaRegistro(new Date());
-        producto.setSku("abodff2312");
+        producto.setSku("weodff2312");
         servicio.guardarProductoConCategoria(producto, categoria);
 
         System.out.println("Producto Insertado------ " + producto.getId());
